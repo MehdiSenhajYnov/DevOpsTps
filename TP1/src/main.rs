@@ -1,5 +1,6 @@
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
+use std::env;
 
 fn handle_client(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
@@ -30,9 +31,19 @@ fn handle_client(mut stream: TcpStream) {
 }
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:8080").expect("Error binding to address");
+    // Obtenez la valeur de la variable d'environnement PING_LISTEN_PORT
+    let port = env::var("PING_LISTEN_PORT").unwrap_or_else(|_| String::from("8080"));
 
-    println!("Server listening on 127.0.0.1:8080");
+    // Convertissez la chaîne en entier, si nécessaire
+    let port: u16 = port.parse().expect("Le port doit être un nombre entier");
+
+    let mut ipAndPort: String = String::from("127.0.0.1:");
+    ipAndPort = format!("{}{}", ipAndPort, &port.to_string());
+    
+    
+    println!("{}{}","Server listening on ", ipAndPort);
+    let listener = TcpListener::bind(ipAndPort).expect("Error binding to address");
+
 
     for stream in listener.incoming() {
         match stream {
