@@ -23,15 +23,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const os_1 = require("os");
 const http = __importStar(require("http"));
 const defaultPort = 3000;
-const port = process.env.PING_LISTEN_PORT ? parseInt(process.env.PING_LISTEN_PORT, 10) : defaultPort;
+const port = process.env.PING_LISTEN_PORT || defaultPort;
 const server = http.createServer((req, res) => {
     if (req.method === 'GET') {
         if (req.url == '/ping') {
-            const headers = req.headers;
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(headers));
+            console.log(`hostname: ${(0, os_1.hostname)()}`);
+            res.write(JSON.stringify(Object.assign(Object.assign({}, req.headers), { "hostname": (0, os_1.hostname)() })));
+            //res.write(JSON.stringify({}));
+            res.end();
         }
         else {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
