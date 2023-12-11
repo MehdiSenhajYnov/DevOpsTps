@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-nginx-pod
+  namespace: my-namespace
+spec:
+  containers:
+    - name: nginx
+      image: registry.cluster.wik.cloud/public/echo
+      ports:
+      - containerPort: 8080
